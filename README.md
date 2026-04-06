@@ -30,10 +30,10 @@ Customer churn is one of the most expensive problems in the telecom industry. Ac
 
 | Metric | Score |
 |---|---|
-| Recall | 78.6% |
+| Recall |  75.7% |
 | Precision | 48.8% |
-| F1 Score | 60.2% |
-| ROC-AUC | 0.807 |
+| F1 Score | 59.3% |
+| ROC-AUC | 0.814 |
 | Decision threshold | 0.45 |
 
 > Recall was prioritised as the primary metric. Missing a real churner (false negative) costs more than a false alarm — an undetected churner represents permanent revenue loss, while a false alarm results in an unnecessary but recoverable retention offer.
@@ -120,11 +120,11 @@ Phase 4 — Model Training
 Phase 5 — Model Evaluation & Threshold Tuning
       │  Confusion matrix, ROC curve, Precision-Recall curve
       │  Threshold tuned from 0.50 → 0.45
-      │  Recall improves: 75.9% → 78.6%
+      │  Recall improves: 73.5% → 75.7%
       ▼
 Phase 6 — Hyperparameter Tuning
       │  RandomizedSearchCV (60 iterations, 5-fold CV)
-      │  First attempt overfit to SMOTE data (CV F1=85% but test F1=59.8%)
+      │  First attempt overfit to SMOTE data (CV F1=85.32% but test F1=59.8%)
       │  Constrained search with regularisation attempted
       │  Default model retained — best real-world generalisation
       ▼
@@ -176,13 +176,11 @@ Download `WA_Fn-UseC_-Telco-Customer-Churn.csv` from [Kaggle](https://www.kaggle
 
 ### 4. Run the notebooks in order
 ```
-notebooks/01_setup_data_loading.ipynb
-notebooks/02_eda.ipynb
-notebooks/03_feature_engineering.ipynb
-notebooks/04_model_training.ipynb
-notebooks/05_model_evaluation.ipynb
-notebooks/06_hyperparameter_tuning.ipynb
-notebooks/07_shap_explainability.ipynb
+notebooks/01_eda.ipynb
+notebooks/02_modelling.ipynb
+notebooks/03_model_evaluation.ipynb
+notebooks/04_hyperparameter_tuning.ipynb
+notebooks/05_shap_explainability.ipynb
 ```
 
 ### 5. Launch the Streamlit app
@@ -239,9 +237,9 @@ Based on SHAP analysis, the following interventions are recommended for at-risk 
 
 ## Author
 
-**Your Name**  
-Final Year Data Science & AI Student  
-[LinkedIn](https://linkedin.com/in/yourprofile) · [GitHub](https://github.com/yourusername)
+**La Yaung Linn Lett**  
+Data Science & AI Student  
+[GitHub](**https://github.com/yourusername**https://github.com/layaung-linnlett)
 
 ---
 
