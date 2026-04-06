@@ -1,0 +1,68 @@
+# ── Python ────────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+*.pyd
+.Python
+*.egg
+*.egg-info/
+dist/
+build/
+eggs/
+parts/
+var/
+sdist/
+develop-eggs/
+.installed.cfg
+lib/
+lib64/
+
+# ── Virtual environments ──────────────────────────────────────────────────────
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# ── Jupyter Notebooks ─────────────────────────────────────────────────────────
+.ipynb_checkpoints/
+*/.ipynb_checkpoints/*
+
+# ── Data files — raw dataset not tracked (too large, download from Kaggle) ────
+data/telco_churn.csv
+data/WA_Fn-UseC_-Telco-Customer-Churn.csv
+
+# Processed data files ARE tracked (small, reproducible)
+# data/X_train.csv  ← tracked
+# data/X_test.csv   ← tracked
+
+# ── Model files — tracked (needed for Streamlit app) ─────────────────────────
+# models/*.pkl  ← tracked
+
+# ── OS files ──────────────────────────────────────────────────────────────────
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# ── IDE ───────────────────────────────────────────────────────────────────────
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# ── Streamlit ─────────────────────────────────────────────────────────────────
+.streamlit/secrets.toml
+
+# ── Misc ──────────────────────────────────────────────────────────────────────
+*.log
+*.tmp
+.cache/
