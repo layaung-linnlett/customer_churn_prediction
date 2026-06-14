@@ -9,6 +9,7 @@ enabling the business to take proactive retention action.
 
 ## Project Structure
 
+```
 customer-churn/
 ├── data/
 │   ├── Telco-Customer-Churn.csv       ← raw dataset
@@ -23,9 +24,11 @@ customer-churn/
 │   ├── 07_model_improvement.ipynb
 │   └── 08_final_model.ipynb
 ├── models/
-│   └── final_model.pkl                ← saved XGBoost model
-├── outputs/                           ← plots and visualizations
+│   └── final_model.pkl
+├── outputs/
 └── README.md
+```
+
 
 ## Dataset
 
