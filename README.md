@@ -33,15 +33,16 @@ An interactive **Streamlit app** ([`app.py`](app.py)) lets you enter a customer'
 details and get a live churn-risk prediction from the trained model — reusing the
 same tested preprocessing pipeline.
 
+![Customer Churn Predictor demo](outputs/figures/app_demo.png)
+
 Run it locally:
 
 ```bash
 streamlit run app.py
 ```
 
-<!-- After deploying on Streamlit Community Cloud, add the live link and a screenshot here:
+<!-- After deploying on Streamlit Community Cloud, add the live link here:
 **▶️ [Try the live demo](your-streamlit-url)**
-![Demo screenshot](outputs/figures/app_demo.png)
 -->
 
 ---
