@@ -39,6 +39,7 @@ Using a real dataset of 7,043 customers, it works through the full data-science 
 | **imbalanced-learn (SMOTE)** | Correcting the class imbalance |
 | **joblib** | Saving and loading the trained model |
 | **Jupyter Notebook** | Analysis and storytelling |
+| **pytest** | Unit-testing the preprocessing module |
 
 ---
 
@@ -65,9 +66,15 @@ customer-churn/
 │   ├── figures/                         # All charts saved by the notebooks
 │   └── models/
 │       └── final_model.pkl              # Trained, ready-to-reuse final model
-├── src/                                 # Reserved for reusable helper scripts
+├── src/
+│   ├── __init__.py
+│   └── data_preprocessing.py            # Reusable, tested cleaning & encoding functions
+├── tests/
+│   └── test_data_preprocessing.py       # Unit tests for the preprocessing module
+├── pytest.ini                           # Test configuration
 ├── requirements.txt                     # Pinned dependencies
 ├── .gitignore
+├── LICENSE
 └── README.md
 ```
 
@@ -90,7 +97,10 @@ source .venv/bin/activate
 # 3. Install dependencies
 pip install -r requirements.txt
 
-# 4. Launch Jupyter and run the notebooks in order (01 → 08)
+# 4. (Optional) run the unit tests for the preprocessing module
+python -m pytest
+
+# 5. Launch Jupyter and run the notebooks in order (01 → 08)
 jupyter notebook
 ```
 
@@ -118,6 +128,8 @@ churn_flags = (model.predict_proba(X)[:, 1] >= 0.3).astype(int)
 7. **Final Model** — XGBoost + SMOTE + 0.3 threshold, saved with `joblib` and verified by reloading.
 
 **Why these choices?** Logistic Regression sets an honest baseline; tree-based models capture non-linear interactions; SMOTE addresses the root cause (imbalance) rather than the symptom; and threshold tuning aligns the model with the real business cost of a missed churner.
+
+> **Engineering note:** the cleaning and feature-engineering logic lives in [`src/data_preprocessing.py`](src/data_preprocessing.py) as reusable, documented functions, covered by a `pytest` suite in [`tests/`](tests/). Notebooks 02 and 04 import and call these functions, so the exact same validated transformations run everywhere — no copy-pasted logic.
 
 ### Results
 
