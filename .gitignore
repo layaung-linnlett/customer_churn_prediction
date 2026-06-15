@@ -1,12 +1,39 @@
-# Data files
-data/Telco-Customer-Churn.csv
-
-# Python cache
+# ---- Python ----
 __pycache__/
-*.pyc
-
-# Jupyter checkpoints
+*.py[cod]
+*.egg-info/
 .ipynb_checkpoints/
 
-# VS Code
+# ---- Virtual environments ----
+.venv/
+venv/
+env/
+
+# ---- Secrets / config (never commit keys) ----
+.env
+*.env
+secrets.*
+config.local.*
+
+# ---- Editor / tooling ----
+.claude/
 .vscode/
+.idea/
+
+# ---- OS files ----
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ---- Large data files (>50 MB) ----
+# Small project CSVs are intentionally tracked so the notebooks run out of the box.
+# Uncomment the next lines if you add large datasets:
+# *.csv
+# !data/raw/telco-customer-churn.csv
+*.parquet
+*.feather
+*.zip
+*.gz
+*.7z
+
+# Files larger than ~50 MB should not be committed; use Git LFS or a download script instead.

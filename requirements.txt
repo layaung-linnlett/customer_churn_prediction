@@ -1,8 +1,22 @@
-pandas
-numpy
-matplotlib
-seaborn
-scikit-learn
-xgboost
-imbalanced-learn
-joblib
+# Customer Churn Prediction — Python dependencies
+# Install with:  pip install -r requirements.txt
+
+# Data handling
+pandas==3.0.3
+numpy==2.3.2
+
+# Visualisation
+matplotlib==3.10.6
+seaborn==0.13.2
+
+# Machine learning
+scikit-learn==1.6.1
+xgboost==3.2.0
+imbalanced-learn==0.13.0
+
+# Model persistence
+joblib==1.4.2
+
+# Notebook environment
+jupyter==1.1.1
+notebook==7.3.2
