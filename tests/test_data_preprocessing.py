@@ -13,6 +13,7 @@ from src.data_preprocessing import (
     clean_data,
     engineer_features,
     load_raw_data,
+    prepare_customer_for_prediction,
     split_features_target,
 )
 
@@ -100,6 +101,40 @@ def test_split_features_target():
     assert "Churn" not in X.columns
     assert y.name == "Churn"
     assert len(X) == len(y) == 3
+
+
+# ---- prepare_customer_for_prediction --------------------------------------
+
+def test_prepare_customer_matches_feature_columns():
+    reference = clean_data(make_sample_df())
+    feature_columns = list(engineer_features(reference).drop(columns=["Churn"]).columns)
+
+    customer = {
+        "gender": "Female", "SeniorCitizen": 0, "Partner": "Yes",
+        "Dependents": "No", "PhoneService": "Yes", "PaperlessBilling": "Yes",
+        "Contract": "Two year", "InternetService": "Fiber optic",
+        "tenure": 12, "MonthlyCharges": 80.0,
+    }
+    encoded = prepare_customer_for_prediction(customer, reference, feature_columns)
+
+    assert list(encoded.columns) == feature_columns
+    assert encoded.shape[0] == 1
+    assert all(pd.api.types.is_numeric_dtype(encoded[c]) for c in encoded.columns)
+
+
+def test_prepare_customer_sets_correct_dummy():
+    reference = clean_data(make_sample_df())
+    feature_columns = list(engineer_features(reference).drop(columns=["Churn"]).columns)
+
+    customer = {
+        "gender": "Male", "SeniorCitizen": 0, "Partner": "No",
+        "Dependents": "No", "PhoneService": "Yes", "PaperlessBilling": "No",
+        "Contract": "Two year", "InternetService": "DSL",
+        "tenure": 5, "MonthlyCharges": 50.0,
+    }
+    encoded = prepare_customer_for_prediction(customer, reference, feature_columns)
+    # The 'Two year' contract dummy must be switched on
+    assert encoded["Contract_Two year"].iloc[0] == 1.0
 
 
 # ---- integration on the real dataset (skipped if the file is absent) ------

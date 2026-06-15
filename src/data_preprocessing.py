@@ -75,3 +75,42 @@ def split_features_target(df, target="Churn"):
     X = df.drop(columns=[target])
     y = df[target]
     return X, y
+
+
+def prepare_customer_for_prediction(customer, reference_df, feature_columns):
+    """Encode one customer's raw inputs into the model's feature columns.
+
+    A single row can't be one-hot encoded reliably on its own (a category with
+    one value loses its dummy column). To guarantee identical encoding to
+    training, the customer is appended to a ``reference_df`` (the cleaned
+    dataset, which contains every category), run through the same
+    :func:`engineer_features` pipeline, and then aligned to ``feature_columns``
+    (e.g. ``model.feature_names_in_``).
+
+    Parameters
+    ----------
+    customer : dict
+        Raw feature values for one customer (same column names as the cleaned
+        data). ``customerID``/``TotalCharges``/``Churn`` are optional.
+    reference_df : pandas.DataFrame
+        The cleaned dataset, used so encoding sees all categories.
+    feature_columns : sequence of str
+        The exact feature names/order the model expects.
+
+    Returns
+    -------
+    pandas.DataFrame
+        A single-row, numeric DataFrame with columns == ``feature_columns``.
+    """
+    row = pd.DataFrame([customer])
+
+    # engineer_features label-encodes Churn, so the row needs a placeholder.
+    if "Churn" not in row.columns:
+        row["Churn"] = reference_df["Churn"].iloc[0]
+
+    combined = pd.concat([reference_df, row], ignore_index=True)
+    encoded = engineer_features(combined).drop(columns=["Churn"])
+
+    # Take the appended customer and align to the model's exact feature set.
+    single = encoded.iloc[[-1]].reindex(columns=list(feature_columns), fill_value=0)
+    return single.astype(float)

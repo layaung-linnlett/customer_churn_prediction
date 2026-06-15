@@ -27,6 +27,22 @@ Using a real dataset of 7,043 customers, it works through the full data-science 
 
 ---
 
+## Interactive Demo
+
+An interactive **Streamlit app** ([`app.py`](app.py)) lets you enter a customer's
+details and get a live churn-risk prediction from the trained model — reusing the
+same tested preprocessing pipeline.
+
+```bash
+streamlit run app.py
+```
+
+> _Tip: deploy it free on [Streamlit Community Cloud](https://streamlit.io/cloud) and add the live link here, plus a screenshot/GIF below._
+
+<!-- ![Demo screenshot](outputs/figures/app_demo.png) -->
+
+---
+
 ## Tech Stack
 
 | Tool | Used for |
@@ -40,6 +56,7 @@ Using a real dataset of 7,043 customers, it works through the full data-science 
 | **joblib** | Saving and loading the trained model |
 | **Jupyter Notebook** | Analysis and storytelling |
 | **pytest** | Unit-testing the preprocessing module |
+| **Streamlit** | Interactive churn-prediction demo app |
 
 ---
 
@@ -47,6 +64,7 @@ Using a real dataset of 7,043 customers, it works through the full data-science 
 
 ```
 customer-churn/
+├── app.py                               # Interactive Streamlit demo app
 ├── data/
 │   ├── raw/
 │   │   └── telco-customer-churn.csv     # Original dataset — never modified
@@ -102,6 +120,9 @@ python -m pytest
 
 # 5. Launch Jupyter and run the notebooks in order (01 → 08)
 jupyter notebook
+
+# 6. Or launch the interactive demo app
+streamlit run app.py
 ```
 
 Run the notebooks **in numerical order** — each one builds on the data produced by the previous step. Notebook 02 creates the cleaned data, notebook 04 creates the model-ready matrix, and notebook 08 saves the final model to `outputs/models/`.
