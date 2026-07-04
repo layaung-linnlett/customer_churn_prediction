@@ -1,6 +1,6 @@
 # Customer Churn Prediction
 
-**A machine-learning pipeline that flags the telecom customers most likely to cancel — catching 75% of real churners so the business can act before they leave.**
+**A machine-learning pipeline that flags the telecom customers most likely to cancel — catching 77% of real churners so the business can act before they leave.**
 
 ---
 
@@ -10,7 +10,7 @@ Telecom companies lose a large share of revenue to **churn** — customers cance
 
 This project answers a single business question: **which customers are about to leave, while there's still time to keep them?**
 
-Using a real dataset of 7,043 customers, it works through the full data-science lifecycle — exploration, cleaning, EDA, feature engineering, modelling, evaluation, and tuning — to produce a model that prioritises **catching churners** over raw accuracy. The final model identifies **75% of customers who actually churn**, giving the retention team a focused, high-risk shortlist to target instead of contacting everyone.
+Using a real dataset of 7,043 customers, it works through the full data-science lifecycle — exploration, cleaning, EDA, feature engineering, modelling, evaluation, and tuning — to produce a model that prioritises **catching churners** over raw accuracy. The final model identifies **77% of customers who actually churn**, giving the retention team a focused, high-risk shortlist to target instead of contacting everyone.
 
 ---
 
@@ -21,7 +21,7 @@ Using a real dataset of 7,043 customers, it works through the full data-science 
 - **The first few months are the danger zone:** churn is heavily concentrated among low-tenure (new) customers.
 - **High monthly charges (~$70–$110)** and **electronic-check payments** are both strongly linked to churn.
 - A standard model looked good on paper — **82% accuracy** — but caught only **58% of churners**. Accuracy hid the real weakness.
-- The final tuned model lifts churn detection (**recall**) from **58% → 75%**, catching roughly **3 in 4** customers who actually leave and clearing the business target of 70%.
+- The final tuned model lifts churn detection (**recall**) from **58% → 77%**, catching roughly **3 in 4** customers who actually leave and clearing the business target of 70%.
 
 > **Why not just maximise accuracy?** On an imbalanced dataset, a model that predicts "nobody churns" scores 73% accuracy while being useless. This project optimises **recall** instead, because a *missed churner* (lost revenue) costs far more than a *false alarm* (an unnecessary retention offer).
 
@@ -162,10 +162,10 @@ churn_flags = (model.predict_proba(X)[:, 1] >= 0.3).astype(int)
 |---|---|---|---|
 | Logistic Regression (baseline) | 0.58 | 0.63 | 82% |
 | Random Forest | 0.47 | 0.54 | 79% |
-| Random Forest + SMOTE | 0.60 | 0.58 | 77% |
-| XGBoost | 0.52 | 0.57 | 79% |
-| XGBoost + SMOTE | 0.62 | 0.60 | 78% |
-| **XGBoost + SMOTE + Threshold 0.3** | **0.75** | **0.59** | **72%** |
+| Random Forest + SMOTE | 0.61 | 0.59 | 77% |
+| XGBoost | 0.53 | 0.57 | 79% |
+| XGBoost + SMOTE | 0.61 | 0.58 | 77% |
+| **XGBoost + SMOTE + Threshold 0.3** | **0.77** | **0.60** | **73%** |
 
 The final model deliberately trades some accuracy and precision for a large gain in recall — a conscious business decision to minimise missed churners.
 
