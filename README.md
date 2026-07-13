@@ -10,7 +10,7 @@ Telecom companies lose a large share of revenue to **churn** — customers cance
 
 This project answers a single business question: **which customers are about to leave, while there's still time to keep them?**
 
-Using a real dataset of 7,043 customers, it works through the full data-science lifecycle — exploration, cleaning, EDA, feature engineering, modelling, evaluation, and tuning — to produce a model that prioritises **catching churners** over raw accuracy. The final model identifies **77% of customers who actually churn**, giving the retention team a focused, high-risk shortlist to target instead of contacting everyone.
+Using a real dataset of 7,043 customers, it works through the full data-science lifecycle — exploration, cleaning, EDA, feature engineering, modelling, evaluation, and tuning — to produce a model that prioritises **catching churners** over raw accuracy. The final model identifies **75% of customers who actually churn**, giving the retention team a focused, high-risk shortlist to target instead of contacting everyone.
 
 ---
 
