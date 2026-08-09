@@ -41,17 +41,13 @@ Run it locally:
 streamlit run app.py
 ```
 
-<!-- After deploying on Streamlit Community Cloud, add the live link here:
-**▶️ [Try the live demo](your-streamlit-url)**
--->
-
 ---
 
 ## Tech Stack
 
 | Tool | Used for |
 |---|---|
-| **Python 3.13** | Core language |
+| **Python 3.11+** | Core language |
 | **pandas / NumPy** | Data loading, cleaning, and manipulation |
 | **Matplotlib / Seaborn** | Exploratory and result visualisations |
 | **scikit-learn** | Train/test split, Logistic Regression, Random Forest, evaluation metrics |
