@@ -2,6 +2,8 @@
 
 **A machine-learning pipeline that flags the telecom customers most likely to cancel — catching 77% of real churners so the business can act before they leave.**
 
+**Live demo:** https://customer-churn-predictor-telecom.streamlit.app
+
 ---
 
 ## Overview
@@ -35,7 +37,7 @@ same tested preprocessing pipeline.
 
 ![Customer Churn Predictor demo](outputs/figures/app_demo.png)
 
-Run it locally:
+**▶️ [Try it live](https://customer-churn-predictor-telecom.streamlit.app)** — or run it locally:
 
 ```bash
 streamlit run app.py
