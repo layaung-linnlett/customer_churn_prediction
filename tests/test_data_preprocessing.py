@@ -5,7 +5,6 @@ Run from the project root with:  python -m pytest
 
 import os
 
-import numpy as np
 import pandas as pd
 import pytest
 

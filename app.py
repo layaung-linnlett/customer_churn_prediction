@@ -108,6 +108,7 @@ def main():
     no_phone = phone_service == "No"
 
     def internet_field(value):
+        """Return ``value``, or the dataset's placeholder if there is no internet."""
         return "No internet service" if no_internet else value
 
     customer = {
@@ -159,8 +160,8 @@ def main():
         st.markdown(
             "**Recommended action:** prioritise this customer for retention — "
             "e.g. offer an incentive to move to a longer contract, or proactive "
-            "outreach. The biggest churn drivers in this dataset are "
-            "month-to-month contracts, short tenure, high monthly charges, and "
+            "outreach. The strongest churn signals in this dataset are "
+            "month-to-month contracts, short tenure, high monthly charges and "
             "electronic-check payments."
         )
     else:
@@ -174,7 +175,7 @@ def main():
             "Your inputs are encoded with the **same tested preprocessing "
             "pipeline** (`src/data_preprocessing.py`) used to train the model, "
             "then scored by an **XGBoost + SMOTE** classifier. On the held-out "
-            "test set this model catches **75% of real churners** (recall 0.75). "
+            "test set this model catches **77% of real churners** (recall 0.77). "
             "See the notebooks for the full methodology."
         )
 
