@@ -32,7 +32,7 @@ One real data-quality problem: `TotalCharges` was stored as text and hid 11 blan
 
 1. Explored and cleaned the raw data, saving one clean dataset everything downstream reuses.
 2. Plotted churn against contract type, tenure, monthly charges and payment method *before* modelling, so I'd know what a sensible result looked like.
-3. Dropped `customerID` (no signal) and `TotalCharges` (collinear with tenure × monthly charges), label-encoded the binary columns and one-hot encoded the rest with `drop_first=True`.
+3. Dropped `customerID` (no signal) and `TotalCharges` (it correlates **0.9996** with `tenure × MonthlyCharges`, so it carries almost nothing those two columns don't already), label-encoded the binary columns and one-hot encoded the rest with `drop_first=True`.
 4. Split 80/20 (5,634 train / 1,409 test), with the same `random_state=42` split reused in every notebook so results are comparable.
 5. Built a logistic regression baseline, then tested random forest and XGBoost, then SMOTE, then a lower decision threshold.
 
@@ -117,7 +117,7 @@ Writing **L** for the value lost when a churner leaves undetected and **C** for 
 
 **Insight.** Part of this is an encoding artefact. `drop_first=True` splits contract across **two** dummy columns (`Contract_One year` and `Contract_Two year`, with month-to-month as the dropped reference), so its signal is divided while payment method keeps a single column. **I don't have a confident explanation for the absence of tenure**, and I would rather say so than invent one.
 
-**Implication.** This chart cannot be handed to a stakeholder as "the causes of churn". XGBoost's gain-based importance measures **how much the model uses a feature**, not **which direction it pushes the prediction**, and certainly not causation. Nothing here says that paying by electronic check *makes* someone leave; it may simply be how customers who were already at risk happen to pay.
+**Implication.** This chart cannot be handed to a stakeholder as "the causes of churn". I left `importance_type` at its default, which XGBoost resolves to **gain** for tree boosters — I confirmed `feature_importances_` matches the normalised gain scores exactly, and not the weight scores. Gain measures **how much the model uses a feature**, not **which direction it pushes the prediction**, and certainly not causation. Nothing here says that paying by electronic check *makes* someone leave; it may simply be how customers who were already at risk happen to pay.
 
 **Recommendation.** Use the **EDA** (contract type, tenure) for the story you tell the retention team, and use the **model** only for scoring individual customers. Before making any causal claim, re-check with permutation importance or SHAP values, which handle correlated one-hot columns better.
 
@@ -207,7 +207,7 @@ jupyter notebook          # then run 01 -> 08
 ```
 
 ```bash
-python -m pytest          # unit tests for the preprocessing module
+python -m pytest          # 11 unit tests for the preprocessing module
 ```
 
 ```bash
