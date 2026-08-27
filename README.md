@@ -43,21 +43,25 @@ The cleaning and encoding logic lives in [`src/data_preprocessing.py`](src/data_
 | Model | Recall (churn) | F1 | Accuracy |
 |---|---|---|---|
 | Logistic Regression (baseline) | 0.58 | 0.63 | 82% |
-| Random Forest | 0.47 | 0.54 | 79% |
-| Random Forest + SMOTE | 0.61 | 0.59 | 77% |
-| XGBoost | 0.53 | 0.57 | 79% |
-| XGBoost + SMOTE | 0.61 | 0.58 | 77% |
-| **XGBoost + SMOTE + threshold 0.3** | **0.77** | **0.60** | **73%** |
+| Random Forest | 0.46 | 0.53 | 79% |
+| Random Forest + SMOTE | 0.58 | 0.57 | 76% |
+| XGBoost | 0.52 | 0.57 | 79% |
+| XGBoost + SMOTE | 0.62 | 0.60 | 78% |
+| **XGBoost + SMOTE + threshold 0.3** | **0.77** | **0.61** | **74%** |
+
+Every figure on this page comes from one full re-run of notebooks 01-08 in the pinned environment in Section 7. `numpy` and `xgboost` are pinned exactly because SMOTE and the tree models are version-sensitive: earlier runs on different library versions moved these middle rows by up to three points.
 
 ### Why XGBoost — and where that reasoning runs out
 
 I want to be straight about this, because the table above doesn't say what a churn project usually says.
 
-**At the default 0.5 threshold, neither tree model beat the logistic regression baseline on recall.** Plain random forest (0.47) and plain XGBoost (0.53) were both worse than logistic regression (0.58). After SMOTE, random forest and XGBoost landed at **exactly the same recall (0.61)**, and random forest had the slightly better F1.
+**At the default 0.5 threshold, neither tree model beat the logistic regression baseline on recall.** Plain random forest (0.46) and plain XGBoost (0.52) were both worse than logistic regression (0.58). Reaching for a more complex model, on its own, made things worse.
 
-The two changes that actually moved the number were **SMOTE and lowering the decision threshold to 0.3**. Both are model-agnostic. They would work with any classifier that outputs probabilities.
+After SMOTE, XGBoost (0.62 recall, 0.60 F1) did beat random forest (0.58 recall, 0.57 F1). That four-point gap is the one piece of evidence in this project for choosing XGBoost over the other tree model, and it is why the final model uses it.
 
-I kept XGBoost for the final model because it tied for the best post-SMOTE recall and because gradient boosting picks up interactions between contract, tenure and service mix without me hand-specifying them. But **this project does not demonstrate that XGBoost was necessary.** I never ran logistic regression with the same SMOTE and 0.3 threshold. It might have got close, and it would have been more interpretable. That is the first experiment I'd run next. If logistic regression matched it, I'd switch, because it is easier for a retention manager to read.
+But **this project does not establish XGBoost over logistic regression.** XGBoost + SMOTE reaches 0.62, only four points above the untreated logistic baseline's 0.58 — and I never ran logistic regression with the same SMOTE and 0.3 threshold treatment. It might have got close, and it would have been more interpretable. That is the first experiment I'd run next. If logistic regression matched it, I'd switch, because it is easier for a retention manager to read.
+
+The change that did most of the work was neither model. **Lowering the decision threshold from 0.5 to 0.3** took recall from 0.62 to 0.77, and it is model-agnostic: it would work with any classifier that outputs probabilities.
 
 ---
 
@@ -79,9 +83,9 @@ I kept XGBoost for the final model because it tied for the best post-SMOTE recal
 
 ### Finding 2 — The algorithm wasn't the bottleneck; the imbalance and the threshold were
 
-**Observation.** Swapping logistic regression for random forest made recall **worse** (0.58 → 0.47). XGBoost was also worse (0.53). SMOTE lifted both tree models to 0.61. Lowering the decision threshold from 0.5 to 0.3 lifted it to **0.77**.
+**Observation.** Swapping logistic regression for random forest made recall **worse** (0.58 → 0.46). XGBoost was also worse (0.52). SMOTE lifted random forest to 0.58 and XGBoost to 0.62. Lowering the decision threshold from 0.5 to 0.3 lifted it to **0.77**.
 
-**Insight.** Of the 0.24 recall gained between plain XGBoost (0.53) and the final model (0.77), two-thirds came from the threshold change alone: a single number, no retraining. Reaching for a more powerful algorithm first was the wrong instinct, because the models were being trained on data where 73% of examples said "stayed", so they learned to say "stayed".
+**Insight.** Of the 0.25 recall gained between plain XGBoost (0.52) and the final model (0.77), **60% came from the threshold change alone**: a single number, no retraining. Reaching for a more powerful algorithm first was the wrong instinct, because the models were being trained on data where 73% of examples said "stayed", so they learned to say "stayed".
 
 **Implication.** Effort spent on model selection here would have been largely wasted. The 0.5 threshold is a default, not a business decision, and it was costing the retention team most of their churners.
 
@@ -93,16 +97,16 @@ I kept XGBoost for the final model because it tied for the best post-SMOTE recal
 
 ### Finding 3 — Whether this model is worth running depends on two numbers I don't have
 
-**Observation.** On the 1,409-customer test set, the final model flags **576 customers**. Of those, **287 really do churn** and **289 don't**. It **misses 86** churners. The baseline flagged only 316 customers: 217 real churners and 99 false alarms.
+**Observation.** On the 1,409-customer test set, the final model flags **567 customers**. Of those, **286 really do churn** and **281 don't**. It **misses 87** churners. The baseline flagged only 316 customers: 217 real churners and 99 false alarms.
 
-**Insight.** Moving from the baseline to the final model buys **70 extra churners caught**, and costs **190 extra retention offers sent to people who were staying anyway**. That is the trade.
+**Insight.** Moving from the baseline to the final model buys **69 extra churners caught**, and costs **182 extra retention offers sent to people who were staying anyway**. That is the trade.
 
 Writing **L** for the value lost when a churner leaves undetected and **C** for the cost of one retention offer:
 
 | Comparison | The final model is the better choice when |
 |---|---|
 | vs. contacting nobody | a lost customer is worth more than **2.0 ×** a retention offer |
-| vs. the logistic baseline | a lost customer is worth more than **2.7 ×** a retention offer |
+| vs. the logistic baseline | a lost customer is worth more than **2.6 ×** a retention offer |
 | vs. contacting every customer | a lost customer is worth less than **9.7 ×** a retention offer |
 
 **Implication.** This model has an operating band rather than a universal case. If a lost contract is worth less than about two retention offers, the cheapest thing the business can do is nothing. If a lost contract is worth more than about ten retention offers, the cheapest thing is to blanket-contact all 7,043 customers and skip the model entirely. The model only earns its place in between — which, for most telecoms, is where the real numbers sit, but I have not verified that for any actual company.
@@ -113,7 +117,7 @@ Writing **L** for the value lost when a churner leaves undetected and **C** for 
 
 ### Finding 4 — The model's top features are not the story the EDA told
 
-**Observation.** In the EDA, **contract type** gave the cleanest separation between churners and stayers, and churn was heavily concentrated in the **first few months of tenure**. But the model's feature importances rank **electronic-check payment (0.22)** first, **having no internet service (0.16)** second, and **two-year contract (0.09)** third — and neither `tenure` nor `MonthlyCharges` appears in the top 10 at all.
+**Observation.** In the EDA, **contract type** gave the cleanest separation between churners and stayers, and churn was heavily concentrated in the **first few months of tenure**. But the model's feature importances rank **electronic-check payment (0.26)** first, **two-year contract (0.10)** second and **fibre-optic internet (0.10)** third, with **having no internet service (0.08)** fourth — and neither `tenure` nor `MonthlyCharges` appears in the top 10 at all.
 
 **Insight.** Part of this is an encoding artefact. `drop_first=True` splits contract across **two** dummy columns (`Contract_One year` and `Contract_Two year`, with month-to-month as the dropped reference), so its signal is divided while payment method keeps a single column. **I don't have a confident explanation for the absence of tenure**, and I would rather say so than invent one.
 
@@ -142,7 +146,7 @@ Writing **L** for the value lost when a churner leaves undetected and **C** for 
 
 1. **Get the two cost numbers before deploying anything.** Contribution margin of a lost contract, and fully-loaded cost of a retention offer. Until those exist, the 0.3 threshold is a guess, and the model might be outside its useful operating band entirely. This is the highest-value next step and it needs no modelling work.
 
-2. **Run the model as a ranked shortlist, not an automatic action.** At the 0.3 threshold it flags 41% of customers, so on a 7,000-customer base that is roughly 2,900 people. Note the model scores who *looks* like a churner today, not *when* they will leave, so it cannot tell you who is leaving this month. Give the retention team the list ranked by predicted probability and let them work down it as far as budget allows. That way the threshold matters less, because the ranking does the work.
+2. **Run the model as a ranked shortlist, not an automatic action.** At the 0.3 threshold it flags 40% of customers, so on a 7,000-customer base that is roughly 2,800 people. Note the model scores who *looks* like a churner today, not *when* they will leave, so it cannot tell you who is leaving this month. Give the retention team the list ranked by predicted probability and let them work down it as far as budget allows. That way the threshold matters less, because the ranking does the work.
 
 3. **Act on the EDA findings in parallel, because they don't need a model at all.** Month-to-month customers churn far more than contract customers, and churn concentrates in the first months. Incentives to move onto annual contracts, and better first-90-days onboarding, are worth doing whether or not the model ever ships.
 
